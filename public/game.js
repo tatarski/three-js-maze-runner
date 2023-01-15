@@ -1,5 +1,19 @@
-let ground;
+let ground, gold_texture, monetki = [];
+function addMonetka(x,y,z) {
+    let monetka_geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 7, 1);
+    let monetka_material = new THREE.MeshPhongMaterial({color:"yellow", map:gold_texture});
+    let mesh = new THREE.Mesh(monetka_geometry, monetka_material);
+    mesh.position.set(x,y,z);
+    scene.add(mesh);
+    return mesh;
+}
 function init() {
+    // Iron wall texture
+    gold_texture = new THREE.TextureLoader().load("./public/images/monetka.png");
+    gold_texture.wrapS = THREE.RepeatWrapping;
+    gold_texture.wrapT = THREE.RepeatWrapping;
+    gold_texture.repeat.set(1, 1);
+
    // Adjust camera
     camera.position.set(-5,-5,3);
     camera.lookAt(0, 0, 0);
@@ -28,11 +42,11 @@ function init() {
     ground.scale.set(10, 10, 1);
 
     let maze = [
-        [0, 1, 1, 0, 1],
-        [1, 0, 1, 1, 0],
-        [0, 1, 1, 0, 0],
-        [1, 1, 0, 1, 1],
-        [1, 0, 1, 1, 0]
+        [1, 1, 1, 1, 0],
+        [0, 0, 1, 1, 0],
+        [1, 0, 1, 0, 0],
+        [1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 0]
     ]
     let maze_walls = [];
     let maze_wall_material = new THREE.MeshPhongMaterial({color: "white", map: iron_texture});
@@ -60,9 +74,20 @@ function init() {
 
     // Add all objects to scene
     scene.add(l1, l2, l3, ground);
+
+    for(let i = 0; i < 10; i++) {
+        monetki[i] = addMonetka(Math.random()*10 - 5, Math.random()*10 - 5, 2);
+    }
+
 }
 
+let t = 0;
 function update() {
+    t++;
+    for(let i in monetki) {
+        monetki[i].rotation.z += 0.01;
+        monetki[i].position.z = 2 + Math.sin(t/30)*0.5;
+    }
     controls.update();
     // cube.rotation.x += 0.01;
     // cube.rotation.y += 0.01;

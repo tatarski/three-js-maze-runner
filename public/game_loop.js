@@ -7,10 +7,10 @@ function redraw() {
 }
 function init_global() {
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000 );
     renderer = new THREE.WebGLRenderer();
 
-    controls = new THREE.OrbitControls( camera, renderer.domElement);
+    // controls = new THREE.OrbitControls( camera, renderer.domElement);
     
     // Resize renderer to be the size of whole window
     renderer.setSize( window.innerWidth, window.innerHeight );

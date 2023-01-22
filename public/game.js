@@ -1,5 +1,5 @@
 let ground, gold_texture, monetki = [];
-let player, player_ugul = 0;
+let player, phi = 0, theta = 0;
 let chad_texture;
 function addMonetka(x,y,z) {
     let monetka_geometry = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 7, 1);
@@ -132,18 +132,19 @@ window.addEventListener("keyup",
 function onKeyDown(e) {
     if(e.keyCode == 87) { // W
         // zadurjanLiEW = true
-        player.position.x += 0.1*Math.cos(player_ugul);
-        player.position.y += 0.1*Math.sin(player_ugul);
+        player.position.x += 0.1*Math.cos(phi);
+        player.position.y += 0.1*Math.sin(phi);
     }
     if(e.keyCode == 65) { // A
-        player_ugul -= 0.1;
-        player.rotation.z = player_ugul;
+        phi -= 0.1;
+        player.rotation.z = phi;
     }
-    next_x = player.position.x + 0.1*Math.cos(player_ugul);
-    next_y = player.position.y + 0.1*Math.sin(player_ugul);
-    camera.position.set(player.position.x, player.position.y, 1);
+    next_x = player.position.x + 0.1*Math.cos(phi)*Math.sin(theta);
+    next_y = player.position.y + 0.1*Math.sin(phi)*Math.sin(theta);
+    next_z = player.position.y + 0.1*Math.cos(theta);
+    camera.position.set(player.position.x, player.position.y, player.position.z);
     camera.up.set(0, 0, 1);
-    camera.lookAt(next_x, next_y, 1);
+    camera.lookAt(next_x, next_y, next_z);
 }
 window.addEventListener("keydown",
     onKeyDown);

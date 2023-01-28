@@ -160,7 +160,7 @@ function update() {
 
 // Make all values of isPressed array equal to false
 function initIsPressed() {
-    for(let i = 0; i < 1000000000; i++) {
+    for(let i = 0; i < 100000000; i++) {
         isPressed[i] = false;
     }
 }
@@ -171,22 +171,4 @@ function pressButton(e) {
 
 function unpressButton(e) {
     isPressed[e.keyCode] = false;
-}
-
-function movePlayer(e) {
-    if(e.keyCode == 87) { // W
-        // zadurjanLiEW = true
-        player.position.x += 0.1*Math.cos(phi);
-        player.position.y += 0.1*Math.sin(phi);
-    }
-    if(e.keyCode == 65) { // A
-        phi -= 0.1;
-        player.rotation.z = phi;
-    }
-    next_x = player.position.x + 0.1*Math.cos(phi)*Math.sin(theta);
-    next_y = player.position.y + 0.1*Math.sin(phi)*Math.sin(theta);
-    next_z = player.position.y + 0.1*Math.cos(theta);
-    camera.position.set(player.position.x, player.position.y, player.position.z);
-    camera.up.set(0, 0, 1);
-    camera.lookAt(next_x, next_y, next_z);
 }

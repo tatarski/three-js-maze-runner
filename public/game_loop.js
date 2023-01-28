@@ -1,10 +1,12 @@
 let scene = null, camera = null, renderer = null, controls = null;
 
 const clock = new THREE.Clock(true)
+
 function redraw() {
 	requestAnimationFrame( redraw);
 	renderer.render( scene, camera );
 }
+
 function init_global() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000 );

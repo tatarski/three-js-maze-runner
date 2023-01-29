@@ -4,7 +4,7 @@ let chad_texture;
 
 let t = 0;
 const isPressed = [];
-
+let rejim_nomer = 1;
 // Phi and Theta
 let horizontal_angle = 0,
     vertical_angle = 0;
@@ -27,8 +27,10 @@ function addIgrach(x, y, z) {
     return mesh;
 }
 
-
 function init() {
+    renderer.domElement.addEventListener("click", async () => {
+        await renderer.domElement.requestPointerLock();
+    });
     // Iron wall texture
     gold_texture = new THREE.TextureLoader().load("./public/images/monetka.png");
     gold_texture.wrapS = THREE.RepeatWrapping;
@@ -120,10 +122,68 @@ function init() {
 
     // Zelka
     window.addEventListener("keydown", pressButton);
-    window.addEventListener("keyup", unpressButton)
+    window.addEventListener("keyup", unpressButton);
+    window.addEventListener("keyup", smeniRejim);
+    window.addEventListener("mousemove", onMouseMove)
+}
+function onMouseMove(e) {
+    if(rejim_nomer == 7) {
+        horizontal_angle -= e.movementX / 100;
+        vertical_angle += e.movementY/100;
+        if(vertical_angle > Math.PI - 0.01) vertical_angle = Math.PI - 0.01;
+        if(vertical_angle < 0.01) vertical_angle = 0.01;
+    }
 }
 
+
+function smeniRejim(e) {
+    if(e.keyCode == 49) { // button 1
+        rejim_nomer = 1;
+    }
+    if(e.keyCode == 55) { // button 1
+        rejim_nomer = 7;
+    }
+}
 function update() {
+    if(rejim_nomer == 1) {
+        // ternary operator:    (условие ? ако_е_истина : ако_е_лъжа)
+        let mnojitel = isPressed[65] ? 1 : (isPressed[68] ? -1 : 0)
+        horizontal_angle = horizontal_angle + mnojitel * 0.05
+
+        // Napravete tezi dva ifa v 2 reda kod :) (ternary operator)
+        if (isPressed[87]) { // W
+            player.position.x += 0.1 * Math.cos(horizontal_angle)
+            player.position.y += 0.1 * Math.sin(horizontal_angle)
+        }
+        if (isPressed[83]) { // S
+            player.position.x -= 0.1 * Math.cos(horizontal_angle)
+            player.position.y -= 0.1 * Math.sin(horizontal_angle)
+        }
+        camera.position.set(0,0,5);
+        camera.up.set(0,0,1);
+        camera.lookAt(player.position.x, player.position.y, player.position.z);
+        player.rotation.z = horizontal_angle;
+    }
+    if(rejim_nomer == 7) {
+        // ternary operator:    (условие ? ако_е_истина : ако_е_лъжа)
+
+        // Napravete tezi dva ifa v 2 reda kod :) (ternary operator)
+        if (isPressed[87]) { // W
+            player.position.x += 0.1 * Math.cos(horizontal_angle)*Math.sin(vertical_angle)
+            player.position.y += 0.1 * Math.sin(horizontal_angle)*Math.sin(vertical_angle)
+            // player.position.z += 0.1 * Math.cos(vertical_angle);
+        }
+        camera.position.set(player.position.x,player.position.y,player.position.z);
+        camera.up.set(0,0,1);
+        next_x = player.position.x + 0.1*Math.cos(horizontal_angle)*Math.sin(vertical_angle);
+        next_y = player.position.y + 0.1*Math.sin(horizontal_angle)*Math.sin(vertical_angle);
+        next_z = player.position.z + 0.1*Math.cos(vertical_angle);
+        // camera.lookAt(player.position.x, player.position.y, player.position.z);
+        // camera.rotation.set(Math.PI/2 + vertical_angle, -Math.PI/2 + horizontal_angle, 0)
+        camera.up.set(0, 0, 1);
+        camera.lookAt(next_x, next_y, next_z);
+        player.rotation.z = horizontal_angle;
+    }
     t++;
 
     // Rotate and wiggle coins
@@ -131,36 +191,12 @@ function update() {
         monetki[i].rotation.z += 0.01;
         monetki[i].position.z = 2 + Math.sin(t/30)*0.5;
     }
-
-    // Napravete tezi dva ifa v 1 red kod :) (ternary operator)
-    if(isPressed[65]) { // A
-        horizontal_angle += 0.05;
-    }
-    if(isPressed[68]) { // D
-        horizontal_angle -= 0.05;
-    }
-
-    // Napravete tezi dva ifa v 2 reda kod :) (ternary operator)
-    if(isPressed[87]) { // W
-        player.position.x += 0.1*Math.cos(horizontal_angle)
-        player.position.y += 0.1*Math.sin(horizontal_angle)
-    }
-    if(isPressed[83]) { // S
-        player.position.x -= 0.1*Math.cos(horizontal_angle)
-        player.position.y -= 0.1*Math.sin(horizontal_angle)
-    }
     
-
-    // Move and update camera after moving player
-    camera.position.set(player.position.x, player.position.y, player.position.z);
-    camera.up.set(0, 0, 1);
-    camera.rotation.set(Math.PI/2, -Math.PI/2 + horizontal_angle, 0);
-
 }
 
 // Make all values of isPressed array equal to false
 function initIsPressed() {
-    for(let i = 0; i < 100000000; i++) {
+    for(let i = 0; i < 255; i++) {
         isPressed[i] = false;
     }
 }
